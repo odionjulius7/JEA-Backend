@@ -183,15 +183,31 @@ const getAllPropRequest = asyncHandler(async (req, res) => {
 const getAPropRequest = asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
-    // const Property = await Property.findOne({ slug: slug });
+    // Retrieve the property request
     const propertyReq = await Request.findById(id);
+
+    // Check if property request exists
+    if (!propertyReq) {
+      return res.status(404).json({
+        status: false,
+        message: "Property Request Not Found",
+      });
+    }
+
+    // Update the status to true
+    await Request.updateOne({ _id: id }, { $set: { status: true } });
+
+    // Fetch the updated property request
+    const updatedPropertyReq = await Request.findById(id);
+
     res.status(200).json({
       status: true,
       message: "Property Request Found!",
-      propertyReq,
+      propertyReq: updatedPropertyReq,
     });
   } catch (error) {
-    throw new Error(error);
+    console.error("Error getting property request:", error);
+    res.status(500).json({ status: false, message: "Internal Server Error" });
   }
 });
 

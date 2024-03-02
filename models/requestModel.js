@@ -35,6 +35,10 @@ var requestSchema = new mongoose.Schema(
     email: {
       type: String,
     },
+    status: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
