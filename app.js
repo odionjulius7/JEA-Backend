@@ -37,7 +37,7 @@ app.get("/", (req, res) => {
 // app.set("trust proxy", 1);
 app.use(
   "/api",
-  rateLimitter(60 * 60 * 1000, "Secs", 50, "Only 50 Requests Allowed")
+  rateLimitter(60 * 60 * 1000, "Secs", 200, "Only 200 Requests Allowed")
 );
 app.use("/api/admin", adminRouter);
 app.use("/api/property", propertyRouter);
