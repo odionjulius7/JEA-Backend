@@ -44,8 +44,13 @@ var projectSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: ["completed", "ongoing"],
+      enum: ["completed", "ongoing", "featured"],
     },
+    // tag: {
+    //   type: String,
+    //   enum: ["regular", "featured"],
+    //   default: "regular",
+    // },
   },
   {
     timestamps: true,
