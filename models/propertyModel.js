@@ -52,6 +52,7 @@ var propertySchema = new mongoose.Schema(
     tag: {
       type: String,
       enum: ["regular", "available luxury", "property of the week"],
+      default: "regular",
     },
   },
   {
