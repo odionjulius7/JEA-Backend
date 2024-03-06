@@ -211,6 +211,39 @@ const getAPropRequest = asyncHandler(async (req, res) => {
   }
 });
 
+// Get In Touch
+const postGetInTouct = asyncHandler(async (req, res) => {
+  // const email = req.body.email
+  const email = "odionjulius7@gmail.com";
+  try {
+    const propRequest = await Request.create(req.body);
+    // const resetLink = `http://localhost:5000/api/property/request/${propRequest._id}`;
+
+    const emailData = {
+      fisrt_Name: propRequest?.fisrt_Name,
+      last_Name: propRequest?.last_Name,
+      additional_details: propRequest?.additional_details,
+      emailto: propRequest?.email,
+    };
+    const data = {
+      to: email,
+      text: `Hey Admin, ${propRequest.fisrt_Name} is getting in touch with you`,
+      subject: "Get In Touch",
+      html: welcome(emailData),
+      //   html: resetLink,
+    };
+    sendEmail(data);
+    res.status(200).json({
+      status: true,
+      message: "Request Sent Successfully",
+      propRequest,
+    });
+  } catch (error) {
+    console.error("Error sending request:", error);
+    res.status(500).json({ status: false, message: "Internal Server Error" });
+  }
+});
+
 module.exports = {
   createProperty,
   getAllPropertys,
@@ -221,4 +254,5 @@ module.exports = {
   createPropRequest,
   getAPropRequest,
   getAllPropRequest,
+  postGetInTouct,
 };

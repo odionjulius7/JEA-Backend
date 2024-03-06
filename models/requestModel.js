@@ -5,7 +5,6 @@ var requestSchema = new mongoose.Schema(
   {
     inquirer_category: {
       type: String,
-      required: true,
       enum: ["individual", "agent", "developer"],
     },
     property_category: {
@@ -20,9 +19,7 @@ var requestSchema = new mongoose.Schema(
     location: {
       type: String,
     },
-    additional_details: {
-      type: String,
-    },
+
     fullName: {
       type: String,
     },
@@ -33,6 +30,15 @@ var requestSchema = new mongoose.Schema(
       type: String,
     },
     email: {
+      type: String,
+    },
+    fisrt_Name: {
+      type: String,
+    },
+    last_Name: {
+      type: String,
+    },
+    additional_details: {
       type: String,
     },
     status: {

@@ -8,6 +8,7 @@ const {
   createPropRequest,
   getAPropRequest,
   getAllPropRequest,
+  postGetInTouct,
 } = require("../controllers/propertyCtrl");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
@@ -32,6 +33,7 @@ propertyRouter.put("/:id", authMiddleware, isAdmin, updateProperty);
 propertyRouter.delete("/:id", authMiddleware, isAdmin, deleteProperty);
 
 // Request Prop
+propertyRouter.post("/getintouch", postGetInTouct);
 propertyRouter.post("/request", createPropRequest);
 propertyRouter.get("/request/all", getAllPropRequest);
 propertyRouter.get("/request/:id", getAPropRequest);
