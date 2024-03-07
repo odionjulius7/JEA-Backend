@@ -37,6 +37,9 @@ var projectSchema = new mongoose.Schema(
     number_of_room: {
       type: Number,
     },
+    logo: {
+      type: String,
+    },
     images: {
       type: [String], // Changed to an array of strings
       // Default image URL as the first item in the array

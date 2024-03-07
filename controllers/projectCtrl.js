@@ -42,6 +42,52 @@ const createProject = asyncHandler(async (req, res) => {
     res.status(500).json({ status: false, message: "Internal Server Error" });
   }
 });
+// const createFeaturedProject = asyncHandler(async (req, res) => {
+//   try {
+//     const uploadPromises = req.files.map((file) => {
+//       return new Promise((resolve, reject) => {
+//         cloudinary.uploader.upload(file.path, (error, result) => {
+//           if (result) {
+//             resolve(result.secure_url);
+//           } else {
+//             reject(error);
+//           }
+//         });
+//       });
+//     });
+
+//     const uploadLogo = req.files.map((file) => {
+//       return new Promise((resolve, reject) => {
+//         cloudinary.uploader.upload(file.path, (error, result) => {
+//           if (result) {
+//             resolve(result.secure_url);
+//           } else {
+//             reject(error);
+//           }
+//         });
+//       });
+//     });
+
+//     const logoUrl =
+
+//     const imageUrls = await Promise.all(uploadPromises);
+//     req.body.images = imageUrls;
+
+//     if (req.body.title) {
+//       req.body.slug = slugify(req.body.title.toLowerCase());
+//     }
+
+//     const project = await Project.create(req.body);
+//     res.status(200).json({
+//       status: true,
+//       message: "Project Created Successfully",
+//       project,
+//     });
+//   } catch (error) {
+//     console.error("Error creating Project:", error);
+//     res.status(500).json({ status: false, message: "Internal Server Error" });
+//   }
+// });
 
 // Get All Projects
 const getAllProjects = asyncHandler(async (req, res) => {
