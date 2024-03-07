@@ -14,7 +14,7 @@ var propertySchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
+      // required: true,
     },
     price: {
       type: Number,
@@ -22,16 +22,19 @@ var propertySchema = new mongoose.Schema(
     },
     location: {
       type: String,
-      required: true,
+      // required: true,
+    },
+    video_url: {
+      type: String,
     },
     features: {
-      type: String,
+      type: [String],
     },
     neighborhood_info: {
-      type: String,
+      type: [String],
     },
     property_details: {
-      type: String,
+      type: [String],
     },
     number_of_room: {
       type: Number,
@@ -44,11 +47,11 @@ var propertySchema = new mongoose.Schema(
       required: true,
       enum: ["buy", "rent", "land", "short let"],
     },
-    category: {
-      type: String,
-      required: true,
-      enum: ["buy", "rent", "land", "short let"],
-    },
+    // category: {
+    //   type: String,
+    //   required: true,
+    //   enum: ["buy", "rent", "land", "short let"],
+    // },
     tag: {
       type: String,
       enum: ["featured", "available luxury", "property of the week"],
