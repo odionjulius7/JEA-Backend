@@ -24,16 +24,15 @@ var projectSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    features: {
+    features: {},
+    neighborhood_info: {},
+    property_details: {},
+    agent_whatsapp: {
       type: String,
     },
-    neighborhood_info: {
+    agent_call: {
       type: String,
     },
-    property_details: {
-      type: String,
-    },
-
     number_of_room: {
       type: Number,
     },
