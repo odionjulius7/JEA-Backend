@@ -13,8 +13,8 @@ const projectRouter = require("express").Router();
 
 projectRouter.post(
   "/",
-  authMiddleware,
-  isAdmin,
+  // authMiddleware,
+  // isAdmin,
   upload.fields([
     { name: "images", maxCount: 40 },
     { name: "image", maxCount: 1 },

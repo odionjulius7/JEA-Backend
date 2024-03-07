@@ -18,8 +18,8 @@ const propertyRouter = require("express").Router();
 
 propertyRouter.post(
   "/",
-  authMiddleware,
-  isAdmin,
+  // authMiddleware,
+  // isAdmin,
   upload.array("images"),
   createProperty
 );
