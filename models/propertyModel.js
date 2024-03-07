@@ -24,6 +24,12 @@ var propertySchema = new mongoose.Schema(
       type: String,
       // required: true,
     },
+    agent_whatsapp: {
+      type: String,
+    },
+    agent_call: {
+      type: String,
+    },
     video_url: {
       type: String,
     },
