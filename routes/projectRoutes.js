@@ -15,9 +15,24 @@ projectRouter.post(
   "/",
   authMiddleware,
   isAdmin,
-  upload.array("images"),
+  upload.fields([
+    { name: "images", maxCount: 40 },
+    { name: "image", maxCount: 1 },
+  ]),
+  // upload.array("images"),
   createProject
 );
+
+// projectRouter.post(
+//   "/",
+//   authMiddleware,
+//   isAdmin,
+//   upload.fields([
+//     { name: "video", maxCount: 5 },
+//     { name: "image", maxCount: 5 },
+//   ]),
+//   createProject
+// );
 projectRouter.get("/all", getAllProjects);
 
 projectRouter.get("/:id", getProject);

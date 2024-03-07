@@ -12,6 +12,14 @@ cloudinary.config({
 // Create Our Project
 const createProject = asyncHandler(async (req, res) => {
   try {
+    // Upload Logo
+    const logoResult = await cloudinary.uploader.upload(
+      req.files.image[0].path,
+      {
+        resource_type: "image",
+      }
+    );
+
     const uploadPromises = req.files.map((file) => {
       return new Promise((resolve, reject) => {
         cloudinary.uploader.upload(file.path, (error, result) => {
@@ -24,8 +32,11 @@ const createProject = asyncHandler(async (req, res) => {
       });
     });
 
+    const logoUrl = logoResult.secure_url;
+
     const imageUrls = await Promise.all(uploadPromises);
     req.body.images = imageUrls;
+    req.body.logo = logoUrl;
 
     if (req.body.title) {
       req.body.slug = slugify(req.body.title.toLowerCase());
@@ -42,6 +53,7 @@ const createProject = asyncHandler(async (req, res) => {
     res.status(500).json({ status: false, message: "Internal Server Error" });
   }
 });
+
 // const createFeaturedProject = asyncHandler(async (req, res) => {
 //   try {
 //     const uploadPromises = req.files.map((file) => {
@@ -56,19 +68,14 @@ const createProject = asyncHandler(async (req, res) => {
 //       });
 //     });
 
-//     const uploadLogo = req.files.map((file) => {
-//       return new Promise((resolve, reject) => {
-//         cloudinary.uploader.upload(file.path, (error, result) => {
-//           if (result) {
-//             resolve(result.secure_url);
-//           } else {
-//             reject(error);
-//           }
-//         });
-//       });
-//     });
-
-//     const logoUrl =
+//     // Upload Logo
+//     const logResult = await cloudinary.uploader.upload(
+//       req.files.image[0].path,
+//       {
+//         resource_type: "image",
+//       }
+//     );
+//     const logoUrl = imageResult.logResult;
 
 //     const imageUrls = await Promise.all(uploadPromises);
 //     req.body.images = imageUrls;
