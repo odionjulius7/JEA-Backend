@@ -13,12 +13,12 @@ cloudinary.config({
 const createProject = asyncHandler(async (req, res) => {
   try {
     // Upload Logo
-    const logoResult = await cloudinary.uploader.upload(
-      req.files.image[0].path,
-      {
-        resource_type: "image",
-      }
-    );
+    // const logoResult = await cloudinary.uploader.upload(
+    //   req.files.image[0].path,
+    //   {
+    //     resource_type: "image",
+    //   }
+    // );
 
     const uploadPromises = req.files.map((file) => {
       return new Promise((resolve, reject) => {
@@ -32,11 +32,11 @@ const createProject = asyncHandler(async (req, res) => {
       });
     });
 
-    const logoUrl = logoResult.secure_url;
+    // const logoUrl = logoResult.secure_url;
 
     const imageUrls = await Promise.all(uploadPromises);
     req.body.images = imageUrls;
-    req.body.logo = logoUrl;
+    // req.body.logo = logoUrl;
 
     if (req.body.title) {
       req.body.slug = slugify(req.body.title.toLowerCase());
@@ -53,6 +53,49 @@ const createProject = asyncHandler(async (req, res) => {
     res.status(500).json({ status: false, message: "Internal Server Error" });
   }
 });
+// const createProject = asyncHandler(async (req, res) => {
+//   try {
+//     // Upload Logo
+//     const logoResult = await cloudinary.uploader.upload(
+//       req.files.image[0].path,
+//       {
+//         resource_type: "image",
+//       }
+//     );
+
+//     const uploadPromises = req.files.map((file) => {
+//       return new Promise((resolve, reject) => {
+//         cloudinary.uploader.upload(file.path, (error, result) => {
+//           if (result) {
+//             resolve(result.secure_url);
+//           } else {
+//             reject(error);
+//           }
+//         });
+//       });
+//     });
+
+//     const logoUrl = logoResult.secure_url;
+
+//     const imageUrls = await Promise.all(uploadPromises);
+//     req.body.images = imageUrls;
+//     req.body.logo = logoUrl;
+
+//     if (req.body.title) {
+//       req.body.slug = slugify(req.body.title.toLowerCase());
+//     }
+
+//     const project = await Project.create(req.body);
+//     res.status(200).json({
+//       status: true,
+//       message: "Project Created Successfully",
+//       project,
+//     });
+//   } catch (error) {
+//     console.error("Error creating Project:", error);
+//     res.status(500).json({ status: false, message: "Internal Server Error" });
+//   }
+// });
 
 // const createFeaturedProject = asyncHandler(async (req, res) => {
 //   try {
