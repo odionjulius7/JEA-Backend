@@ -1,8 +1,9 @@
-const mongoose = require("mongoose"); // Erase if already required
+const mongoose = require("mongoose");
 
 // Declare the Schema of the Mongo model
-var projectSchema = new mongoose.Schema(
+const projectSchema = new mongoose.Schema(
   {
+    //
     title: {
       type: String,
       required: true,
@@ -24,9 +25,15 @@ var projectSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    features: {},
-    neighborhood_info: {},
-    property_details: {},
+    // features: {
+    //   type: String,
+    // },
+    // neighborhood_info: {
+    //   type: String,
+    // },
+    // property_details: {
+    //   type: String,
+    // },
     agent_whatsapp: {
       type: String,
     },
@@ -40,9 +47,9 @@ var projectSchema = new mongoose.Schema(
       type: String,
     },
     images: {
-      type: [String], // Changed to an array of strings
-      // Default image URL as the first item in the array
+      type: [String],
     },
+
     category: {
       type: String,
       required: true,
@@ -53,11 +60,89 @@ var projectSchema = new mongoose.Schema(
       enum: ["regular", "featured"],
       default: "regular",
     },
+    // Additional fields
+    address: {
+      type: String,
+    },
+    additional_fees: {
+      type: String,
+    },
+    property_id: {
+      type: String,
+    },
+    property_type: {
+      type: String,
+    },
+    details_category: {
+      type: String,
+    },
+    status: {
+      type: String,
+    },
+    Number_of_Stories: {
+      type: String,
+    },
+    year_built: {
+      type: String,
+    },
+    garage_capacity: {
+      type: String,
+    },
+    recent_renovations: {
+      type: String,
+    },
+    youtube_url: {
+      type: String,
+    },
+    // Features fields
+    feature_1: {
+      type: String,
+    },
+    feature_2: {
+      type: String,
+    },
+    feature_3: {
+      type: String,
+    },
+    feature_4: {
+      type: String,
+    },
+    feature_5: {
+      type: String,
+    },
+    feature_6: {
+      type: String,
+    },
+    feature_7: {
+      type: String,
+    },
+    feature_8: {
+      type: String,
+    },
+    // Neighborhood info fields
+    neighborhood_info1: {
+      type: String,
+    },
+    neighborhood_info2: {
+      type: String,
+    },
+    neighborhood_info3: {
+      type: String,
+    },
+    neighborhood_info4: {
+      type: String,
+    },
+    neighborhood_info5: {
+      type: String,
+    },
+    neighborhood_info6: {
+      type: String,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-//Export the model
+// Export the model
 module.exports = mongoose.model("Project", projectSchema);
