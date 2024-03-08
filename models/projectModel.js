@@ -15,7 +15,6 @@ const projectSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
     },
     price: {
       type: Number,
@@ -23,7 +22,6 @@ const projectSchema = new mongoose.Schema(
     },
     location: {
       type: String,
-      required: true,
     },
     // features: {
     //   type: String,
