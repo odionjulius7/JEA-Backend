@@ -13,12 +13,12 @@ cloudinary.config({
 const createProject = asyncHandler(async (req, res) => {
   try {
     // Upload Logo
-    const logoResult = await cloudinary.uploader.upload(
-      req.files.image[0].path,
-      {
-        resource_type: "image",
-      }
-    );
+    // const logoResult = await cloudinary.uploader.upload(
+    //   req.files.image[0].path,
+    //   {
+    //     resource_type: "image",
+    //   }
+    // );
 
     const uploadPromises = req.files.map((file) => {
       return new Promise((resolve, reject) => {
@@ -32,11 +32,11 @@ const createProject = asyncHandler(async (req, res) => {
       });
     });
 
-    const logoUrl = logoResult.secure_url;
+    // const logoUrl = logoResult.secure_url;
 
     const imageUrls = await Promise.all(uploadPromises);
     req.body.images = imageUrls;
-    req.body.logo = logoUrl;
+    // req.body.logo = logoUrl;
 
     if (req.body.title) {
       req.body.slug = slugify(req.body.title.toLowerCase());
