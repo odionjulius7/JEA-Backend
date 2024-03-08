@@ -23,15 +23,6 @@ const projectSchema = new mongoose.Schema(
     location: {
       type: String,
     },
-    // features: {
-    //   type: String,
-    // },
-    // neighborhood_info: {
-    //   type: String,
-    // },
-    // property_details: {
-    //   type: String,
-    // },
     agent_whatsapp: {
       type: String,
     },
@@ -51,7 +42,7 @@ const projectSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: ["completed", "ongoing", "featured"],
+      enum: ["completed", "ongoing"],
     },
     tag: {
       type: String,
