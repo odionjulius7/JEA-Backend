@@ -31,10 +31,6 @@ const createProperty = asyncHandler(async (req, res) => {
     const imageUrls = await Promise.all(uploadPromises);
     req.body.images = imageUrls;
 
-    // if (req.body.title) {
-    //   req.body.slug = slugify(req.body.title.toLowerCase());
-    // }
-
     const property = await Property.create(req.body);
     res.status(200).json({
       status: true,
@@ -43,7 +39,9 @@ const createProperty = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     console.error("Error creating property:", error);
-    res.status(500).json({ status: false, message: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ status: false, message: "Internal Server Error", error });
   }
 });
 
