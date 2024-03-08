@@ -33,9 +33,6 @@ var propertySchema = new mongoose.Schema(
     video_url: {
       type: String,
     },
-    // features: {},
-    // neighborhood_info: {},
-    // property_details: {},
     number_of_room: {
       type: Number,
     },

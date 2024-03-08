@@ -4,6 +4,7 @@ const {
   getProject,
   updateProject,
   deleteProject,
+  updateFeaturedProject,
 } = require("../controllers/projectCtrl");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
@@ -29,5 +30,13 @@ projectRouter.get("/:id", getProject);
 
 projectRouter.put("/:id", authMiddleware, isAdmin, updateProject);
 projectRouter.delete("/:id", authMiddleware, isAdmin, deleteProject);
+
+projectRouter.put(
+  "/featured/:id",
+  // authMiddleware,
+  // isAdmin,
+  upload.single("logo"),
+  updateFeaturedProject
+);
 
 module.exports = projectRouter;

@@ -12,14 +12,6 @@ cloudinary.config({
 // Create Our Project
 const createProject = asyncHandler(async (req, res) => {
   try {
-    // Upload Logo
-    // const logoResult = await cloudinary.uploader.upload(
-    //   req.files.image[0].path,
-    //   {
-    //     resource_type: "image",
-    //   }
-    // );
-
     const uploadPromises = req.files.map((file) => {
       return new Promise((resolve, reject) => {
         cloudinary.uploader.upload(file.path, (error, result) => {
@@ -32,15 +24,9 @@ const createProject = asyncHandler(async (req, res) => {
       });
     });
 
-    // const logoUrl = logoResult.secure_url;
-
     const imageUrls = await Promise.all(uploadPromises);
     req.body.images = imageUrls;
     // req.body.logo = logoUrl;
-
-    // if (req.body.title) {
-    //   req.body.slug = slugify(req.body.title.toLowerCase());
-    // }
 
     const project = await Project.create(req.body);
     res.status(200).json({
@@ -125,6 +111,36 @@ const getProject = asyncHandler(async (req, res) => {
   }
 });
 
+// Update Featured Project
+const updateFeaturedProject = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongoDBId(id);
+
+  try {
+    cloudinary.uploader.upload(req.file.path, async (error, result) => {
+      if (result) {
+        const logo = result.secure_url;
+
+        // Update project with the new logo and set tag to "featured"
+        const updateProject = await Project.findByIdAndUpdate(
+          id,
+          { logo, tag: "featured" },
+          { new: true }
+        );
+
+        res.status(200).json({
+          status: true,
+          message: "Project Featured!",
+          updateProject,
+        });
+      }
+    });
+  } catch (error) {
+    console.error("Error updating project:", error);
+    res.status(500).json({ status: false, message: "Internal Server Error" });
+  }
+});
+
 // Update Project
 const updateProject = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -168,4 +184,5 @@ module.exports = {
   getProject,
   updateProject,
   deleteProject,
+  updateFeaturedProject,
 };
