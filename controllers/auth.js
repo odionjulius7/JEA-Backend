@@ -122,7 +122,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
 
 // change or forgot password
 const changePassword = async (req, res) => {
-  const { email, currentPassword, newPassword } = req.body;
+  const { email, old_password, new_password } = req.body;
 
   // Check if the user with the provided email exists
   const user = await User.findOne({ email });
@@ -133,25 +133,25 @@ const changePassword = async (req, res) => {
   }
 
   // Check if the provided current password matches the user's current password
-  if (!(await user.comparePassword(currentPassword))) {
+  if (!(await user.isPasswordMatched(old_password))) {
     return res.status(StatusCodes.UNAUTHORIZED).json({
       msg: "Incorrect current password",
     });
   }
 
   // Update the user's password
-  user.password = newPassword;
+  user.password = new_password;
   await user.save();
 
   // Send an email to the user to confirm the password change
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-  const msg = {
-    to: email,
-    from: "odionjulius7@gmail.com",
-    subject: "Your password has been changed!",
-    html: `<strong>Hello ${user.firstName}, your password has been changed successfully.</strong>`,
-  };
-  await sgMail.send(msg);
+  // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  // const msg = {
+  //   to: email,
+  //   from: "odionjulius7@gmail.com",
+  //   subject: "Your password has been changed!",
+  //   html: `<strong>Hello ${user.firstName}, your password has been changed successfully.</strong>`,
+  // };
+  // await sgMail.send(msg);
 
   res.status(StatusCodes.OK).json({
     msg: "Password changed successfully",
