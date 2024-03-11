@@ -16,7 +16,7 @@ adminRouter.post("/login", loginAdmin);
 adminRouter.post("/change-password", authMiddleware, isAdmin, changePassword);
 adminRouter.post("/send-token", sendResetToken);
 adminRouter.post("/reset-password", resetPassword);
-adminRouter.post("/change/password",authMiddleware, isAdmin, changePassword);
+adminRouter.post("/change/password", changePassword);
 
 // router.route("/change/password").post(authMiddleware, changePassword);
 // //
