@@ -86,54 +86,36 @@ const deleteOne = (Model) => {
 const getAll = (Model, populateOptions) => {
   return asyncHandler(async (req, res) => {
     try {
-      let filter = {};
-
+      const { price, location, number_of_room, category } = req.query;
       // Create an instance of it using the new keyword
-      const features = new apiFeatures(Model.find(filter), req.query)
-        .filter()
-        .sort()
-        .limitFields()
-        .paginate();
-
+      const query = Model.find().lean();
       // Construct a dynamic query based on the provided search parameters
       const dynamicQuery = {};
-
       // Handle price[gte]
-      if (req.query.price && req.query.price.gte !== undefined) {
-        dynamicQuery.price = {
-          ...dynamicQuery.price,
-          $gte: req.query.price.gte,
-        };
+      if (price && price.gte !== undefined && price.gte !== "") {
+        dynamicQuery.price = { ...dynamicQuery.price, $gte: price.gte };
       }
-
       // Handle price[lte]
-      if (req.query.price && req.query.price.lte !== undefined) {
-        dynamicQuery.price = {
-          ...dynamicQuery.price,
-          $lte: req.query.price.lte,
-        };
+      if (price && price.lte !== undefined && price.lte !== "") {
+        dynamicQuery.price = { ...dynamicQuery.price, $lte: price.lte };
       }
-
-      if (req.query.location) {
-        dynamicQuery.location = { $regex: new RegExp(req.query.location, "i") };
+      if (location) {
+        dynamicQuery.location = { $regex: new RegExp(location, "i") };
       }
-      if (req.query.number_of_room) {
-        dynamicQuery.number_of_room = req.query.number_of_room;
+      if (number_of_room) {
+        dynamicQuery.number_of_room = number_of_room;
       }
-      if (req.query.category) {
-        dynamicQuery.category = req.query.category;
+      if (category) {
+        dynamicQuery.category = category;
       }
-
-      // Merge the dynamic query with the existing features.query
-      features.query = { ...features.query, ...dynamicQuery };
+      // Merge the dynamic query with the existing query
+      query.where(dynamicQuery);
 
       if (populateOptions) {
-        query = features.query.populate(populateOptions);
-      } else {
-        query = features.query;
+        query.populate(populateOptions);
       }
 
-      const data = await query;
+      const data = await query.exec();
 
       res
         .status(200)
@@ -173,3 +155,61 @@ const getAll = (Model, populateOptions) => {
 // };
 
 module.exports = { createOne, getOne, updateOne, deleteOne, getAll };
+
+// const getAll = (Model, populateOptions) => {
+//   return asyncHandler(async (req, res) => {
+//     try {
+//       let filter = {};
+
+//       // Create an instance of it using the new keyword
+//       const features = new apiFeatures(Model.find(filter).lean(), req.query)
+//         .filter()
+//         .sort()
+//         .limitFields()
+//         .paginate();
+
+//       // Construct a dynamic query based on the provided search parameters
+//       const dynamicQuery = {};
+
+//       // Handle price[gte]
+//       if (req.query.price && req.query.price.gte !== undefined) {
+//         dynamicQuery.price = {
+//           ...dynamicQuery.price,
+//           $gte: req.query.price.gte,
+//         };
+//       }
+
+//       // Handle price[lte]
+//       if (req.query.price && req.query.price.lte !== undefined) {
+//         dynamicQuery.price = {
+//           ...dynamicQuery.price,
+//           $lte: req.query.price.lte,
+//         };
+//       }
+
+//       if (req.query.location) {
+//         dynamicQuery.location = { $regex: new RegExp(req.query.location, "i") };
+//       }
+//       if (req.query.number_of_room) {
+//         dynamicQuery.number_of_room = req.query.number_of_room;
+//       }
+//       if (req.query.category) {
+//         dynamicQuery.category = req.query.category;
+//       }
+
+//       // Merge the dynamic query with the existing features.query
+//       features.query = { ...features.query, ...dynamicQuery };
+
+//       // Execute the query to get the actual data
+//       const data = await features.query.exec();
+
+//       // Send only the data in the response
+//       res
+//         .status(200)
+//         .json({ status: true, message: "Fetched Successfully!!", data });
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).json({ status: false, message: "Internal Server Error" });
+//     }
+//   });
+// };
