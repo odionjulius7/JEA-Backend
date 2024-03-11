@@ -146,9 +146,9 @@ const updateProject = asyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongoDBId(id);
   try {
-    if (req.body.title) {
-      req.body.slug = slugify(req.body.title.toLowerCase());
-    }
+    // if (req.body.title) {
+    //   req.body.slug = slugify(req.body.title.toLowerCase());
+    // }
     const updateProject = await Project.findByIdAndUpdate(id, req.body, {
       new: true,
     });
