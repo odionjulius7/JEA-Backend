@@ -202,11 +202,13 @@ const deleteProject = asyncHandler(async (req, res) => {
 // Create Our Featueres N Logo
 const createFeaturesLogo = asyncHandler(async (req, res) => {
   try {
+    console.log("req.file:", req.file); // Log req.file to check its contents
     if (!req.file) {
       return res
         .status(400)
         .json({ status: false, message: "No file uploaded" });
     }
+
     cloudinary.uploader.upload(req.file.path, async (error, result) => {
       if (result) {
         let image = result.secure_url;
@@ -218,10 +220,14 @@ const createFeaturesLogo = asyncHandler(async (req, res) => {
           message: "Features N Logo created successfully",
           featuresLogo,
         });
+      } else {
+        res
+          .status(500)
+          .json({ status: false, message: "Failed to upload image" });
       }
     });
   } catch (error) {
-    console.error("Error creating Project:", error);
+    console.error("Error creating Features and Logo:", error);
     res.status(500).json({ status: false, message: "Internal Server Error" });
   }
 });

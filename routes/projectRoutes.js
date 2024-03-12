@@ -50,7 +50,7 @@ projectRouter.put(
 // Features And Logo
 projectRouter.post(
   "/features/logo",
-  upload.array("f-image"),
+  upload.single("f-image"),
   createFeaturesLogo
 );
 projectRouter.get("/features/logo/all", getAllFeaturesLog);
