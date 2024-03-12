@@ -5,6 +5,7 @@ const {
   updateProject,
   deleteProject,
   updateFeaturedProject,
+  getProjectBySlug,
 } = require("../controllers/projectCtrl");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
@@ -27,8 +28,13 @@ projectRouter.post(
 projectRouter.get("/all", getAllProjects);
 
 projectRouter.get("/:id", getProject);
+projectRouter.get("/proj/:slug", getProjectBySlug);
 
-projectRouter.put("/:id", authMiddleware, isAdmin, updateProject);
+projectRouter.put(
+  "/:id",
+  //  authMiddleware, isAdmin,
+  updateProject
+);
 projectRouter.delete("/:id", authMiddleware, isAdmin, deleteProject);
 
 projectRouter.put(

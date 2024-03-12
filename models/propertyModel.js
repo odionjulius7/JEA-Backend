@@ -11,6 +11,7 @@ var propertySchema = new mongoose.Schema(
     },
     slug: {
       type: String,
+      unique: true,
     },
     description: {
       type: String,

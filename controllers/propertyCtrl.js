@@ -4,7 +4,7 @@ const Request = require("../models/requestModel");
 const cloudinary = require("cloudinary").v2;
 const { validateMongoDBId } = require("../config/validateMongoDBId");
 const { default: slugify } = require("slugify");
-const { getAll } = require("./customCtrl");
+const { getAll, findAvailableSlug } = require("./customCtrl");
 const welcome = require("../helper/emailTemplates");
 const sendEmail = require("../helper/emailCtrl");
 cloudinary.config({
@@ -13,9 +13,13 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Create Our Property
 const createProperty = asyncHandler(async (req, res) => {
   try {
+    if (req.body.title) {
+      const baseSlug = slugify(req.body.title.toLowerCase());
+      req.body.slug = await findAvailableSlug(Property, baseSlug);
+    }
+
     const uploadPromises = req.files.map((file) => {
       return new Promise((resolve, reject) => {
         cloudinary.uploader.upload(file.path, (error, result) => {
@@ -45,6 +49,41 @@ const createProperty = asyncHandler(async (req, res) => {
   }
 });
 
+// Create Our Property
+// const createProperty = asyncHandler(async (req, res) => {
+//   try {
+//     if (req.body.title) {
+//       req.body.slug = slugify(req.body.title.toLowerCase());
+//     }
+//     const uploadPromises = req.files.map((file) => {
+//       return new Promise((resolve, reject) => {
+//         cloudinary.uploader.upload(file.path, (error, result) => {
+//           if (result) {
+//             resolve(result.secure_url);
+//           } else {
+//             reject(error);
+//           }
+//         });
+//       });
+//     });
+
+//     const imageUrls = await Promise.all(uploadPromises);
+//     req.body.images = imageUrls;
+
+//     const property = await Property.create(req.body);
+//     res.status(200).json({
+//       status: true,
+//       message: "Property Created Successfully",
+//       property,
+//     });
+//   } catch (error) {
+//     console.error("Error creating property:", error);
+//     res
+//       .status(500)
+//       .json({ status: false, message: "Internal Server Error", error });
+//   }
+// });
+
 // Get All Propertys
 const getAllPropertys = asyncHandler(async (req, res) => {
   try {
@@ -60,22 +99,6 @@ const getAllPropertys = asyncHandler(async (req, res) => {
 });
 
 const searchProperties = getAll(Property);
-
-// const searchProperties = asyncHandler(async (req, res) => {
-//   try {
-//     const features = new apiFeatures(Property.find(), req.query)
-//       .filter()
-//       .sort()
-//       .limitFields()
-//       .paginate();
-
-//     const properties = await features.query.exec();
-
-//     res.status(200).json(properties);
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// });
 
 // Find A Property
 const getProperty = asyncHandler(async (req, res) => {
@@ -93,13 +116,40 @@ const getProperty = asyncHandler(async (req, res) => {
   }
 });
 
+const getPropertyBySlug = asyncHandler(async (req, res) => {
+  const { slug } = req.params;
+  try {
+    const property = await Property.findOne({ slug: slug });
+    if (!property) {
+      return res.status(404).json({
+        status: false,
+        message: "Property not found",
+      });
+    }
+
+    res.status(200).json({
+      status: true,
+      message: "Property found!",
+      property,
+    });
+  } catch (error) {
+    console.error("Error retrieving property:", error);
+    res.status(500).json({
+      status: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+});
+
 // Update Property
 const updateProperty = asyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongoDBId(id);
   try {
     if (req.body.title) {
-      req.body.slug = slugify(req.body.title.toLowerCase());
+      const baseSlug = slugify(req.body.title.toLowerCase());
+      req.body.slug = await findAvailableSlug(Property, baseSlug);
     }
     const updateProperty = await Property.findByIdAndUpdate(id, req.body, {
       new: true,
@@ -253,4 +303,5 @@ module.exports = {
   getAPropRequest,
   getAllPropRequest,
   postGetInTouct,
+  getPropertyBySlug,
 };

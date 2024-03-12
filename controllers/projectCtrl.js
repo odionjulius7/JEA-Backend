@@ -3,6 +3,7 @@ const Project = require("../models/projectModel");
 const cloudinary = require("cloudinary").v2;
 const { validateMongoDBId } = require("../config/validateMongoDBId");
 const { default: slugify } = require("slugify");
+const { findAvailableSlug } = require("./customCtrl");
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -12,6 +13,11 @@ cloudinary.config({
 // Create Our Project
 const createProject = asyncHandler(async (req, res) => {
   try {
+    if (req.body.title) {
+      const baseSlug = slugify(req.body.title.toLowerCase());
+      req.body.slug = await findAvailableSlug(Project, baseSlug);
+    }
+
     const uploadPromises = req.files.map((file) => {
       return new Promise((resolve, reject) => {
         cloudinary.uploader.upload(file.path, (error, result) => {
@@ -110,6 +116,19 @@ const getProject = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
+const getProjectBySlug = asyncHandler(async (req, res) => {
+  const { slug } = req.params;
+  try {
+    const project = await Project.findOne({ slug: slug });
+    res.status(200).json({
+      status: true,
+      message: "Project Found!",
+      project,
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+});
 
 // Update Featured Project
 const updateFeaturedProject = asyncHandler(async (req, res) => {
@@ -146,9 +165,10 @@ const updateProject = asyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongoDBId(id);
   try {
-    // if (req.body.title) {
-    //   req.body.slug = slugify(req.body.title.toLowerCase());
-    // }
+    if (req.body.title) {
+      const baseSlug = slugify(req.body.title.toLowerCase());
+      req.body.slug = await findAvailableSlug(Project, baseSlug);
+    }
     const updateProject = await Project.findByIdAndUpdate(id, req.body, {
       new: true,
     });
@@ -185,4 +205,5 @@ module.exports = {
   updateProject,
   deleteProject,
   updateFeaturedProject,
+  getProjectBySlug,
 };

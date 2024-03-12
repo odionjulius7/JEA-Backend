@@ -126,35 +126,27 @@ const getAll = (Model, populateOptions) => {
   });
 };
 
-// const getAll = (Model, populateOptions) => {
-//   return asyncHandler(async (req, res) => {
-//     try {
-//       let filter = {};
+const findAvailableSlug = async (Model, baseSlug, count = 1) => {
+  const potentialSlug = count === 1 ? baseSlug : `${baseSlug}-${count}`;
 
-//       /* create an instance of it using the new keyword  */
-//       const features = new apiFeatures(Model.find(filter), req.query)
-//         .filter()
-//         .sort()
-//         .limitFields()
-//         .paginate();
-//       //
-//       if (populateOptions) {
-//         query = features.query.populate(populateOptions);
-//       } else {
-//         query = features.query;
-//       }
-//       const data = await query;
-//       //
-//       res
-//         .status(200)
-//         .json({ status: true, message: "Fetched Successfully!!", data });
-//     } catch (error) {
-//       throw new Error(error);
-//     }
-//   });
-// };
+  const existingPost = await Model.findOne({ slug: potentialSlug });
 
-module.exports = { createOne, getOne, updateOne, deleteOne, getAll };
+  if (!existingPost) {
+    return potentialSlug;
+  }
+
+  // If a post with the potentialSlug exists, recursively call the function with an incremented count
+  return findAvailableSlug(Model, baseSlug, count + 1);
+};
+
+module.exports = {
+  createOne,
+  getOne,
+  updateOne,
+  deleteOne,
+  getAll,
+  findAvailableSlug,
+};
 
 // const getAll = (Model, populateOptions) => {
 //   return asyncHandler(async (req, res) => {
@@ -210,6 +202,33 @@ module.exports = { createOne, getOne, updateOne, deleteOne, getAll };
 //     } catch (error) {
 //       console.error(error);
 //       res.status(500).json({ status: false, message: "Internal Server Error" });
+//     }
+//   });
+// };
+// const getAll = (Model, populateOptions) => {
+//   return asyncHandler(async (req, res) => {
+//     try {
+//       let filter = {};
+
+//       /* create an instance of it using the new keyword  */
+//       const features = new apiFeatures(Model.find(filter), req.query)
+//         .filter()
+//         .sort()
+//         .limitFields()
+//         .paginate();
+//       //
+//       if (populateOptions) {
+//         query = features.query.populate(populateOptions);
+//       } else {
+//         query = features.query;
+//       }
+//       const data = await query;
+//       //
+//       res
+//         .status(200)
+//         .json({ status: true, message: "Fetched Successfully!!", data });
+//     } catch (error) {
+//       throw new Error(error);
 //     }
 //   });
 // };

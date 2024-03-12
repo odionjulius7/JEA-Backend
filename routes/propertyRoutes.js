@@ -9,6 +9,7 @@ const {
   getAPropRequest,
   getAllPropRequest,
   postGetInTouct,
+  getPropertyBySlug,
 } = require("../controllers/propertyCtrl");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
@@ -28,6 +29,7 @@ propertyRouter.get("/all", getAllPropertys);
 propertyRouter.get("/search", searchProperties);
 
 propertyRouter.get("/:id", getProperty);
+propertyRouter.get("/prop/:slug", getPropertyBySlug);
 
 propertyRouter.put("/:id", authMiddleware, isAdmin, updateProperty);
 propertyRouter.delete("/:id", authMiddleware, isAdmin, deleteProperty);
