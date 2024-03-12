@@ -14,6 +14,12 @@ const projectSchema = new mongoose.Schema(
       type: String,
       unique: true,
     },
+    featuresAndLogos: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "FeaturesAndLogo",
+      },
+    ],
     description: {
       type: String,
     },

@@ -6,6 +6,8 @@ const {
   deleteProject,
   updateFeaturedProject,
   getProjectBySlug,
+  createFeaturesLogo,
+  getAllFeaturesLog,
 } = require("../controllers/projectCtrl");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
@@ -45,4 +47,13 @@ projectRouter.put(
   updateFeaturedProject
 );
 
+// Features And Logo
+projectRouter.post(
+  "/features/logo",
+  upload.array("f-image"),
+  createFeaturesLogo
+);
+projectRouter.get("/features/logo/all", getAllFeaturesLog);
+// createFeaturesLogo,
+// getAllFeaturesLog,
 module.exports = projectRouter;

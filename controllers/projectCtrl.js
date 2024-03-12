@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Project = require("../models/projectModel");
+const FeaturesAndLogo = require("../models/featuresAndLogo");
 const cloudinary = require("cloudinary").v2;
 const { validateMongoDBId } = require("../config/validateMongoDBId");
 const { default: slugify } = require("slugify");
@@ -198,6 +199,47 @@ const deleteProject = asyncHandler(async (req, res) => {
   }
 });
 
+// Create Our Featueres N Logo
+const createFeaturesLogo = asyncHandler(async (req, res) => {
+  try {
+    if (!req.file) {
+      return res
+        .status(400)
+        .json({ status: false, message: "No file uploaded" });
+    }
+    cloudinary.uploader.upload(req.file.path, async (error, result) => {
+      if (result) {
+        let image = result.secure_url;
+        req.body.image = image;
+        const featuresLogo = await FeaturesAndLogo.create(req.body);
+
+        res.status(200).json({
+          status: true,
+          message: "Features N Logo created successfully",
+          featuresLogo,
+        });
+      }
+    });
+  } catch (error) {
+    console.error("Error creating Project:", error);
+    res.status(500).json({ status: false, message: "Internal Server Error" });
+  }
+});
+
+//
+const getAllFeaturesLog = asyncHandler(async (req, res) => {
+  try {
+    const allFeat = await FeaturesAndLogo.find();
+    res.status(200).json({
+      status: true,
+      message: "All Fetched!",
+      allFeat,
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
 module.exports = {
   createProject,
   getAllProjects,
@@ -206,4 +248,7 @@ module.exports = {
   deleteProject,
   updateFeaturedProject,
   getProjectBySlug,
+  //
+  createFeaturesLogo,
+  getAllFeaturesLog,
 };

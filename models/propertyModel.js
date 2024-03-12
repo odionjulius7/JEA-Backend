@@ -43,7 +43,7 @@ var propertySchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: ["buy", "rent", "land", "short let"],
+      enum: ["buy", "rent", "land", "shortlet"],
     },
 
     tag: {

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose"); // Erase if already required
-// !mdbgum
+
 // Declare the Schema of the Mongo model
-var blogSchema = new mongoose.Schema(
+var featuresAndLogoSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -11,10 +11,6 @@ var blogSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please provide the features image"],
     },
-    body: {
-      type: String,
-      required: [true, "Please provide the body of the blog"],
-    },
   },
   {
     timestamps: true,
@@ -22,4 +18,4 @@ var blogSchema = new mongoose.Schema(
 );
 
 //Export the model
-module.exports = mongoose.model("Blog", blogSchema);
+module.exports = mongoose.model("FeaturesAndLogo", featuresAndLogoSchema);
