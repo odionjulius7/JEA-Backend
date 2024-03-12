@@ -11,9 +11,10 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Create Our Project
 const createProject = asyncHandler(async (req, res) => {
   try {
+    let project; // Initialize project variable
+
     if (req.body.title) {
       const baseSlug = slugify(req.body.title.toLowerCase());
       req.body.slug = await findAvailableSlug(Project, baseSlug);
@@ -33,9 +34,22 @@ const createProject = asyncHandler(async (req, res) => {
 
     const imageUrls = await Promise.all(uploadPromises);
     req.body.images = imageUrls;
-    // req.body.logo = logoUrl;
 
-    const project = await Project.create(req.body);
+    // Loop through featuresAndLogos array and add each item to the project's featuresAndLogos array
+    for (const featureAndLogoId of req.body.featuresAndLogos) {
+      const featureAndLogo = await FeaturesAndLogo.findById(featureAndLogoId);
+      if (featureAndLogo) {
+        if (!project) {
+          project = await Project.create(req.body); // Create project if not created yet
+        }
+        project.featuresAndLogos.push(featureAndLogo);
+      }
+    }
+
+    if (!project) {
+      project = await Project.create(req.body); // Create project if featuresAndLogos is empty
+    }
+
     res.status(200).json({
       status: true,
       message: "Project Created Successfully",
@@ -46,6 +60,42 @@ const createProject = asyncHandler(async (req, res) => {
     res.status(500).json({ status: false, message: "Internal Server Error" });
   }
 });
+
+// Create Our Project
+// const createProject = asyncHandler(async (req, res) => {
+//   try {
+//     if (req.body.title) {
+//       const baseSlug = slugify(req.body.title.toLowerCase());
+//       req.body.slug = await findAvailableSlug(Project, baseSlug);
+//     }
+
+//     const uploadPromises = req.files.map((file) => {
+//       return new Promise((resolve, reject) => {
+//         cloudinary.uploader.upload(file.path, (error, result) => {
+//           if (result) {
+//             resolve(result.secure_url);
+//           } else {
+//             reject(error);
+//           }
+//         });
+//       });
+//     });
+
+//     const imageUrls = await Promise.all(uploadPromises);
+//     req.body.images = imageUrls;
+//     // req.body.logo = logoUrl;
+
+//     const project = await Project.create(req.body);
+//     res.status(200).json({
+//       status: true,
+//       message: "Project Created Successfully",
+//       project,
+//     });
+//   } catch (error) {
+//     console.error("Error creating Project:", error);
+//     res.status(500).json({ status: false, message: "Internal Server Error" });
+//   }
+// });
 
 // const createFeaturedProject = asyncHandler(async (req, res) => {
 //   try {
