@@ -14,6 +14,12 @@ const projectSchema = new mongoose.Schema(
       type: String,
       unique: true,
     },
+    latitude: {
+      type: String,
+    },
+    longitude: {
+      type: String,
+    },
     featuresAndLogos: [
       {
         type: mongoose.Schema.Types.ObjectId,
