@@ -107,7 +107,7 @@ const getAllProjects = asyncHandler(async (req, res) => {
 const getProject = asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
-    const project = await Project.findById(id);
+    const project = await Project.findById(id).populate("featuresAndLogos");
     res.status(200).json({
       status: true,
       message: "Project Found!",
@@ -120,7 +120,9 @@ const getProject = asyncHandler(async (req, res) => {
 const getProjectBySlug = asyncHandler(async (req, res) => {
   const { slug } = req.params;
   try {
-    const project = await Project.findOne({ slug: slug });
+    const project = await Project.findOne({ slug: slug }).populate(
+      "featuresAndLogos"
+    );
     res.status(200).json({
       status: true,
       message: "Project Found!",
