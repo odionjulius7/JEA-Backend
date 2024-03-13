@@ -15,10 +15,10 @@ const projectSchema = new mongoose.Schema(
       unique: true,
     },
     latitude: {
-      type: String,
+      type: Number,
     },
     longitude: {
-      type: String,
+      type: Number,
     },
     featuresAndLogos: [
       {
