@@ -108,6 +108,9 @@ const getAll = (Model, populateOptions) => {
       if (category) {
         dynamicQuery.category = category;
       }
+
+      console.log("Dynamic Query:", dynamicQuery); // Log the dynamic query
+
       // Merge the dynamic query with the existing query
       query.where(dynamicQuery);
 
