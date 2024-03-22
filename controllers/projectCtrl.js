@@ -12,6 +12,71 @@ cloudinary.config({
 });
 
 // Create Our Project
+// const createProject = asyncHandler(async (req, res) => {
+//   // console.log(req.body);
+//   try {
+//     if (!req.body.title) {
+//       return res
+//         .status(400)
+//         .json({ status: false, message: "Title is required" });
+//     }
+
+//     // Generate slug based on the title
+//     const baseSlug = slugify(req.body.title.toLowerCase());
+//     req.body.slug = await findAvailableSlug(Project, baseSlug);
+
+//     // Upload images to Cloudinary
+//     const uploadImages = async () => {
+//       const imageUrls = [];
+//       const images = req.files["images"]; // Access uploaded images array
+//       if (images) {
+//         for (const image of images) {
+//           const result = await cloudinary.uploader.upload(image.path);
+//           imageUrls.push(result.secure_url);
+//         }
+//       }
+//       return imageUrls;
+//     };
+
+//     // Upload logo to Cloudinary
+//     const uploadLogo = async () => {
+//       const logo = req.files["logo"]; // Access uploaded logo file
+//       console.log(logo);
+//       if (!logo || logo.length === 0) {
+//         console.error("No logo file found in the request");
+//         return null;
+//       }
+
+//       const logoResult = await cloudinary.uploader.upload(logo[0].path);
+//       console.log("Logo uploaded successfully:", logoResult.secure_url);
+//       return logoResult.secure_url;
+//     };
+
+//     // Perform image and logo uploads concurrently
+//     const [imageUrls, logoUrl] = await Promise.all([
+//       uploadImages(),
+//       uploadLogo(),
+//     ]);
+
+//     // Set images and logo URLs in req.body
+//     req.body.images = imageUrls;
+//     req.body.logo = logoUrl;
+
+//     // Create project with req.body containing images and logo URLs
+//     const project = await Project.create(req.body);
+
+//     // Return response
+//     res.status(200).json({
+//       status: true,
+//       message: "Project Created Successfully",
+//       project,
+//     });
+//   } catch (error) {
+//     console.error("Error creating Project:", error);
+//     res.status(500).json({ status: false, message: "Internal Server Error" });
+//   }
+// });
+
 const createProject = asyncHandler(async (req, res) => {
   try {
     if (req.body.title) {
@@ -33,7 +98,11 @@ const createProject = asyncHandler(async (req, res) => {
 
     const imageUrls = await Promise.all(uploadPromises);
     req.body.images = imageUrls;
-    // req.body.logo = logoUrl;
+
+    // Push the last item from imageUrls array to req.body.logo
+    if (imageUrls.length > 0) {
+      req.body.logo = imageUrls[imageUrls.length - 1];
+    }
 
     const project = await Project.create(req.body);
     res.status(200).json({
@@ -204,7 +273,7 @@ const deleteProject = asyncHandler(async (req, res) => {
 // Create Our Featueres N Logo
 const createFeaturesLogo = asyncHandler(async (req, res) => {
   try {
-    console.log("req.file:", req.file); // Log req.file to check its contents
+    // console.log("req.file:", req.file); // Log req.file to check its contents
     if (!req.file) {
       return res
         .status(400)

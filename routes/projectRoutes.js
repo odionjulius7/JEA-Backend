@@ -20,11 +20,22 @@ projectRouter.post(
   // authMiddleware,
   // isAdmin,
   upload.array("images"),
+  // upload.single("logo"),
   createProject
 );
+
+// projectRouter.post(
+//   "/",
+//   upload.fields([
+//     { name: "logo", maxCount: 1 }, // Maximum 1 logo allowed
+//     { name: "images", maxCount: 40 }, // Maximum 40 images allowed
+//   ]),
+//   createProject
+// );
+
 // upload.fields([
 //   { name: "images", maxCount: 40 },
-//   { name: "image", maxCount: 1 },
+//   { name: "logo", maxCount: 1 },
 // ]),
 
 projectRouter.get("/all", getAllProjects);
