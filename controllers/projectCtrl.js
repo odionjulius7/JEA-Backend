@@ -208,23 +208,35 @@ const updateFeaturedProject = asyncHandler(async (req, res) => {
   validateMongoDBId(id);
 
   try {
-    cloudinary.uploader.upload(req.file.path, async (error, result) => {
-      if (result) {
-        const logo = result.secure_url;
+    // cloudinary.uploader.upload(req.file.path, async (error, result) => {
+    //   if (result) {
+    //     const logo = result.secure_url;
 
-        // Update project with the new logo and set tag to "featured"
-        const updateProject = await Project.findByIdAndUpdate(
-          id,
-          { logo, tag: "featured" },
-          { new: true }
-        );
+    //     // Update project with the new logo and set tag to "featured"
+    //     const updateProject = await Project.findByIdAndUpdate(
+    //       id,
+    //       { logo, tag: "featured" },
+    //       { new: true }
+    //     );
 
-        res.status(200).json({
-          status: true,
-          message: "Project Featured!",
-          updateProject,
-        });
-      }
+    //     res.status(200).json({
+    //       status: true,
+    //       message: "Project Featured!",
+    //       updateProject,
+    //     });
+    //   }
+    // });
+    // Update project with the new logo and set tag to "featured"
+    const updateProject = await Project.findByIdAndUpdate(
+      id,
+      { tag: "featured" },
+      { new: true }
+    );
+
+    res.status(200).json({
+      status: true,
+      message: "Project Featured!",
+      updateProject,
     });
   } catch (error) {
     console.error("Error updating project:", error);
@@ -270,7 +282,7 @@ const deleteProject = asyncHandler(async (req, res) => {
   }
 });
 
-// Create Our Featueres N Logo
+// Create Our Featueres N Icon
 const createFeaturesLogo = asyncHandler(async (req, res) => {
   try {
     // console.log("req.file:", req.file); // Log req.file to check its contents

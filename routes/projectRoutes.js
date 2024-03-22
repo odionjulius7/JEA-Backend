@@ -24,20 +24,6 @@ projectRouter.post(
   createProject
 );
 
-// projectRouter.post(
-//   "/",
-//   upload.fields([
-//     { name: "logo", maxCount: 1 }, // Maximum 1 logo allowed
-//     { name: "images", maxCount: 40 }, // Maximum 40 images allowed
-//   ]),
-//   createProject
-// );
-
-// upload.fields([
-//   { name: "images", maxCount: 40 },
-//   { name: "logo", maxCount: 1 },
-// ]),
-
 projectRouter.get("/all", getAllProjects);
 
 projectRouter.get("/:id", getProject);
@@ -54,7 +40,7 @@ projectRouter.put(
   "/featured/:id",
   // authMiddleware,
   // isAdmin,
-  upload.single("logo"),
+  // upload.single("logo"),
   updateFeaturedProject
 );
 
