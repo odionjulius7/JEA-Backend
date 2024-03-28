@@ -186,6 +186,23 @@ const getProject = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
+// Slug
+const getProjectByTag = asyncHandler(async (req, res) => {
+  const { tag } = req.params;
+  try {
+    const project = await Project.findOne({ tag: tag }).populate(
+      "featuresAndLogos"
+    );
+    res.status(200).json({
+      status: true,
+      message: "Project Found!",
+      project,
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+// Tag
 const getProjectBySlug = asyncHandler(async (req, res) => {
   const { slug } = req.params;
   try {
@@ -204,30 +221,20 @@ const getProjectBySlug = asyncHandler(async (req, res) => {
 
 // Update Featured Project
 const updateFeaturedProject = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+  const { id, oldId } = req.params;
   validateMongoDBId(id);
+  validateMongoDBId(oldId);
 
   try {
-    // cloudinary.uploader.upload(req.file.path, async (error, result) => {
-    //   if (result) {
-    //     const logo = result.secure_url;
+    // Find the old project and check if it has a tag of "featured"
+    const oldProject = await Project.findById(oldId);
+    if (oldProject && oldProject.tag === "featured") {
+      // Update the tag of the old project to "regular"
+      await Project.findByIdAndUpdate(oldId, { tag: "regular" });
+    }
 
-    //     // Update project with the new logo and set tag to "featured"
-    //     const updateProject = await Project.findByIdAndUpdate(
-    //       id,
-    //       { logo, tag: "featured" },
-    //       { new: true }
-    //     );
-
-    //     res.status(200).json({
-    //       status: true,
-    //       message: "Project Featured!",
-    //       updateProject,
-    //     });
-    //   }
-    // });
-    // Update project with the new logo and set tag to "featured"
-    const updateProject = await Project.findByIdAndUpdate(
+    // Update the project with the id parameter to have the tag "featured"
+    const updatedProject = await Project.findByIdAndUpdate(
       id,
       { tag: "featured" },
       { new: true }
@@ -236,7 +243,7 @@ const updateFeaturedProject = asyncHandler(async (req, res) => {
     res.status(200).json({
       status: true,
       message: "Project Featured!",
-      updateProject,
+      updatedProject,
     });
   } catch (error) {
     console.error("Error updating project:", error);
@@ -337,6 +344,7 @@ module.exports = {
   deleteProject,
   updateFeaturedProject,
   getProjectBySlug,
+  getProjectByTag,
   //
   createFeaturesLogo,
   getAllFeaturesLog,

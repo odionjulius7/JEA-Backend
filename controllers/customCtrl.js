@@ -100,8 +100,20 @@ const getAll = (Model, populateOptions) => {
         dynamicQuery.price = { ...dynamicQuery.price, $lte: price.lte };
       }
       if (location) {
-        dynamicQuery.location = { $regex: new RegExp(location, "i") };
+        dynamicQuery.$or = [
+          { title: { $regex: new RegExp(location, "i") } },
+          { description: { $regex: new RegExp(location, "i") } },
+          { location: { $regex: new RegExp(location, "i") } },
+          { slug: { $regex: new RegExp(location, "i") } },
+          { category: { $regex: new RegExp(location, "i") } },
+          { address: { $regex: new RegExp(location, "i") } },
+          { details_category: { $regex: new RegExp(location, "i") } },
+          { property_type: { $regex: new RegExp(location, "i") } },
+          { Number_of_Stories: { $regex: new RegExp(location, "i") } },
+          { status: { $regex: new RegExp(location, "i") } },
+        ];
       }
+
       if (number_of_room) {
         dynamicQuery.number_of_room = number_of_room;
       }
@@ -128,6 +140,53 @@ const getAll = (Model, populateOptions) => {
     }
   });
 };
+
+// Filter
+// const getAll = (Model, populateOptions) => {
+//   return asyncHandler(async (req, res) => {
+//     try {
+//       const { price, location, number_of_room, category } = req.query;
+//       // Create an instance of it using the new keyword
+//       const query = Model.find().lean();
+//       // Construct a dynamic query based on the provided search parameters
+//       const dynamicQuery = {};
+//       // Handle price[gte]
+//       if (price && price.gte !== undefined && price.gte !== "") {
+//         dynamicQuery.price = { ...dynamicQuery.price, $gte: price.gte };
+//       }
+//       // Handle price[lte]
+//       if (price && price.lte !== undefined && price.lte !== "") {
+//         dynamicQuery.price = { ...dynamicQuery.price, $lte: price.lte };
+//       }
+//       if (location) {
+//         dynamicQuery.location = { $regex: new RegExp(location, "i") };
+//       }
+//       if (number_of_room) {
+//         dynamicQuery.number_of_room = number_of_room;
+//       }
+//       if (category) {
+//         dynamicQuery.category = category;
+//       }
+
+//       console.log("Dynamic Query:", dynamicQuery); // Log the dynamic query
+
+//       // Merge the dynamic query with the existing query
+//       query.where(dynamicQuery);
+
+//       if (populateOptions) {
+//         query.populate(populateOptions);
+//       }
+
+//       const data = await query.exec();
+
+//       res
+//         .status(200)
+//         .json({ status: true, message: "Fetched Successfully!!", data });
+//     } catch (error) {
+//       throw new Error(error);
+//     }
+//   });
+// };
 
 const findAvailableSlug = async (Model, baseSlug, count = 1) => {
   const potentialSlug = count === 1 ? baseSlug : `${baseSlug}-${count}`;

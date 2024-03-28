@@ -29,6 +29,9 @@ const projectSchema = new mongoose.Schema(
     description: {
       type: String,
     },
+    short_description: {
+      type: String,
+    },
     price: {
       type: Number,
       default: 0,

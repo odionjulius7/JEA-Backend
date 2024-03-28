@@ -8,6 +8,7 @@ const {
   getProjectBySlug,
   createFeaturesLogo,
   getAllFeaturesLog,
+  getProjectByTag,
 } = require("../controllers/projectCtrl");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
@@ -28,6 +29,7 @@ projectRouter.get("/all", getAllProjects);
 
 projectRouter.get("/:id", getProject);
 projectRouter.get("/proj/:slug", getProjectBySlug);
+projectRouter.get("/tag/:tag", getProjectByTag);
 
 projectRouter.put(
   "/:id",
@@ -36,13 +38,7 @@ projectRouter.put(
 );
 projectRouter.delete("/:id", authMiddleware, isAdmin, deleteProject);
 
-projectRouter.put(
-  "/featured/:id",
-  // authMiddleware,
-  // isAdmin,
-  // upload.single("logo"),
-  updateFeaturedProject
-);
+projectRouter.put("/featured/:id/:oldId", updateFeaturedProject);
 
 // Features And Logo
 projectRouter.post(
