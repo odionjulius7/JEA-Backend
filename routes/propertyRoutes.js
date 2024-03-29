@@ -31,8 +31,16 @@ propertyRouter.get("/search", searchProperties);
 propertyRouter.get("/:id", getProperty);
 propertyRouter.get("/prop/:slug", getPropertyBySlug);
 
-propertyRouter.put("/:id", authMiddleware, isAdmin, updateProperty);
-propertyRouter.delete("/:id", authMiddleware, isAdmin, deleteProperty);
+propertyRouter.put(
+  "/:id",
+  //  authMiddleware, isAdmin,
+  updateProperty
+);
+propertyRouter.delete(
+  "/:id",
+  //  authMiddleware, isAdmin,
+  deleteProperty
+);
 
 // Request Prop
 propertyRouter.post("/getintouch", postGetInTouct);

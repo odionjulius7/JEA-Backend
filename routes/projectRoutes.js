@@ -36,7 +36,11 @@ projectRouter.put(
   //  authMiddleware, isAdmin,
   updateProject
 );
-projectRouter.delete("/:id", authMiddleware, isAdmin, deleteProject);
+projectRouter.delete(
+  "/:id",
+  // authMiddleware, isAdmin,
+  deleteProject
+);
 
 projectRouter.put("/featured/:id/:oldId", updateFeaturedProject);
 
