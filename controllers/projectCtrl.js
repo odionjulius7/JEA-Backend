@@ -84,6 +84,12 @@ const createProject = asyncHandler(async (req, res) => {
       req.body.slug = await findAvailableSlug(Project, baseSlug);
     }
 
+    // Check if featuresAndLogos field exists in request body
+    if (req.body.featuresAndLogos) {
+      // Split the comma-separated string into an array of IDs
+      req.body.featuresAndLogos = req.body.featuresAndLogos.split(",");
+    }
+
     const uploadPromises = req.files.map((file) => {
       return new Promise((resolve, reject) => {
         cloudinary.uploader.upload(file.path, (error, result) => {
