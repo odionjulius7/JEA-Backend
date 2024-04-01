@@ -227,16 +227,18 @@ const getProjectBySlug = asyncHandler(async (req, res) => {
 
 // Update Featured Project
 const updateFeaturedProject = asyncHandler(async (req, res) => {
-  const { id, oldId } = req.params;
-  // validateMongoDBId(id);
-  // validateMongoDBId(oldId);
+  const { id } = req.params;
+  const { oldId } = req.body;
 
   try {
-    // Find the old project and check if it has a tag of "featured"
-    const oldProject = await Project.findById(oldId);
-    if (oldProject && oldProject.tag === "featured") {
-      // Update the tag of the old project to "regular"
-      await Project.findByIdAndUpdate(oldId, { tag: "regular" });
+    // Check if oldId is provided and if it's different from the current id
+    if (oldId && oldId !== id) {
+      // Find the old project and check if it has a tag of "featured"
+      const oldProject = await Project.findById(oldId);
+      if (oldProject && oldProject.tag === "featured") {
+        // Update the tag of the old project to "regular"
+        await Project.findByIdAndUpdate(oldId, { tag: "regular" });
+      }
     }
 
     // Update the project with the id parameter to have the tag "featured"

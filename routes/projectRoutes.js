@@ -42,7 +42,7 @@ projectRouter.delete(
   deleteProject
 );
 
-projectRouter.put("/featured/:id/:oldId", updateFeaturedProject);
+projectRouter.put("/featured/:id", updateFeaturedProject);
 
 // Features And Logo
 projectRouter.post(
