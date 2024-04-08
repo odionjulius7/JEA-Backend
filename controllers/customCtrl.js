@@ -102,10 +102,10 @@ const getAll = (Model, populateOptions) => {
       if (location) {
         dynamicQuery.$or = [
           { title: { $regex: new RegExp(location, "i") } },
-          { description: { $regex: new RegExp(location, "i") } },
+          // { description: { $regex: new RegExp(location, "i") } },
           { location: { $regex: new RegExp(location, "i") } },
           { slug: { $regex: new RegExp(location, "i") } },
-          { category: { $regex: new RegExp(location, "i") } },
+          { tag: { $regex: new RegExp(location, "i") } },
           { address: { $regex: new RegExp(location, "i") } },
           { details_category: { $regex: new RegExp(location, "i") } },
           { property_type: { $regex: new RegExp(location, "i") } },
