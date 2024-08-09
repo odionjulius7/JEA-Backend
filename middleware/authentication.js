@@ -10,15 +10,19 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
   let token;
   if (req?.headers?.authorization?.startsWith("Bearer")) {
     token = req?.headers?.authorization?.split(" ")[1];
+    console.log("Token:", token);
     try {
       if (token) {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        // const decoded = jwt.verify(token, "mysecret");
+        console.log("Decoded:", decoded);
         const user = await User.findById(decoded?.id);
+        console.log("User:", user);
         req.user = user;
         next();
       }
     } catch (error) {
-      // if the decoded id from header doesn't match with any user in the db
+      console.error("Error:", error);
       throw new Error("Not Authorized, Please Login Again");
     }
   } else {

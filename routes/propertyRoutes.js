@@ -10,6 +10,7 @@ const {
   getAllPropRequest,
   postGetInTouct,
   getPropertyBySlug,
+  updatePropertyImages,
 } = require("../controllers/propertyCtrl");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
@@ -19,8 +20,8 @@ const propertyRouter = require("express").Router();
 
 propertyRouter.post(
   "/",
-  // authMiddleware,
-  // isAdmin,
+  authMiddleware,
+  isAdmin,
   upload.array("images"),
   createProperty
 );
@@ -31,17 +32,16 @@ propertyRouter.get("/search", searchProperties);
 propertyRouter.get("/:id", getProperty);
 propertyRouter.get("/prop/:slug", getPropertyBySlug);
 
-propertyRouter.put(
-  "/:id",
-  //  authMiddleware, isAdmin,
-  updateProperty
-);
-propertyRouter.delete(
-  "/:id",
-  //  authMiddleware, isAdmin,
-  deleteProperty
-);
+propertyRouter.put("/:id", authMiddleware, isAdmin, updateProperty);
+propertyRouter.delete("/:id", authMiddleware, isAdmin, deleteProperty);
 
+propertyRouter.patch(
+  "/img/prop/:id",
+  authMiddleware,
+  isAdmin,
+  upload.array("images"),
+  updatePropertyImages
+);
 // Request Prop
 propertyRouter.post("/getintouch", postGetInTouct);
 propertyRouter.post("/request", createPropRequest);

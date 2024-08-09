@@ -49,6 +49,48 @@ const createProperty = asyncHandler(async (req, res) => {
   }
 });
 
+// update property images
+
+const updatePropertyImages = asyncHandler(async (req, res) => {
+  try {
+    const propertyId = req.params.id;
+    const property = await Property.findById(propertyId);
+
+    if (!property) {
+      return res
+        .status(404)
+        .json({ status: false, message: "Property not found" });
+    }
+
+    const uploadPromises = req.files.map((file) => {
+      return new Promise((resolve, reject) => {
+        cloudinary.uploader.upload(file.path, (error, result) => {
+          if (result) {
+            resolve(result.secure_url);
+          } else {
+            reject(error);
+          }
+        });
+      });
+    });
+
+    const imageUrls = await Promise.all(uploadPromises);
+    property.images = imageUrls;
+
+    await property.save();
+    res.status(200).json({
+      status: true,
+      message: "Property images updated successfully",
+      property,
+    });
+  } catch (error) {
+    console.error("Error updating property images:", error);
+    res
+      .status(500)
+      .json({ status: false, message: "Internal Server Error", error });
+  }
+});
+
 // Create Our Property
 // const createProperty = asyncHandler(async (req, res) => {
 //   try {
@@ -293,6 +335,7 @@ const postGetInTouct = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
+  updatePropertyImages,
   createProperty,
   getAllPropertys,
   getProperty,

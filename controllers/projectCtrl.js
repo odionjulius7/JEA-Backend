@@ -122,6 +122,50 @@ const createProject = asyncHandler(async (req, res) => {
   }
 });
 
+// Update Project Images
+const updateProjectImages = asyncHandler(async (req, res) => {
+  try {
+    const projectId = req.params.id;
+    const project = await Project.findById(projectId);
+
+    if (!project) {
+      return res
+        .status(404)
+        .json({ status: false, message: "Project not found" });
+    }
+
+    const uploadPromises = req.files.map((file) => {
+      return new Promise((resolve, reject) => {
+        cloudinary.uploader.upload(file.path, (error, result) => {
+          if (result) {
+            resolve(result.secure_url);
+          } else {
+            reject(error);
+          }
+        });
+      });
+    });
+
+    const imageUrls = await Promise.all(uploadPromises);
+    project.images = imageUrls;
+
+    // Update the logo if new images are uploaded
+    if (imageUrls.length > 0) {
+      project.logo = imageUrls[imageUrls.length - 1];
+    }
+
+    await project.save();
+    res.status(200).json({
+      status: true,
+      message: "Project images updated successfully",
+      project,
+    });
+  } catch (error) {
+    console.error("Error updating project images:", error);
+    res.status(500).json({ status: false, message: "Internal Server Error" });
+  }
+});
+
 // const createFeaturedProject = asyncHandler(async (req, res) => {
 //   try {
 //     const uploadPromises = req.files.map((file) => {
@@ -345,6 +389,7 @@ const getAllFeaturesLog = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
+  updateProjectImages,
   createProject,
   getAllProjects,
   getProject,
